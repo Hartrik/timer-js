@@ -1,6 +1,7 @@
 import { Context } from "./Context.js";
 import { Timer } from "./Timer.js";
 import { Persistence } from "./Persistence.js";
+import { Analytics } from "./Analytics.js";
 
 /**
  *
@@ -31,9 +32,13 @@ export class DataManager {
     /**
      *
      * @param timer {Timer}
+     * @param createNew {boolean|undefined}
      */
-    putTimer(timer) {
+    putTimer(timer, createNew) {
         this.#persistence.putTimer(timer).then(value => {
+            if (createNew !== undefined) {
+                Analytics.triggerFeatureUsed(createNew ? Analytics.FEATURE_TIMER_CREATED : Analytics.FEATURE_TIMER_UPDATED);
+            }
             this.reload();
         }).catch(reason => {
             console.log(reason);
@@ -46,6 +51,7 @@ export class DataManager {
      */
     deleteTimer(timer) {
         this.#persistence.deleteTimer(timer).then(value => {
+            Analytics.triggerFeatureUsed(Analytics.FEATURE_TIMER_DELETED);
             this.reload();
         }).catch(reason => {
             console.log(reason);
@@ -63,7 +69,7 @@ export class DataManager {
             let timers = Timer.parseTimers(textContent);
             if (Array.isArray(timers)) {
                 for (let i = 0; i < timers.length; i++) {
-                    this.putTimer(timers[i]);
+                    this.putTimer(timers[i], undefined);
                 }
             } else {
                 throw 'Array expected';

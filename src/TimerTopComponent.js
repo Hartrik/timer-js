@@ -5,6 +5,7 @@ import { DomBuilder } from "./DomBuilder.js";
 import { DialogEditTimer } from "./DialogEditTimer.js";
 import { TimerListComponent } from "./TimerListComponent.js";
 import { Timer } from "./Timer.js";
+import { Analytics } from "./Analytics.js";
 import {
     toIso8601DateTime,
     toIso8601Date,
@@ -50,6 +51,7 @@ export class TimerTopComponent {
             let date = new Date();
             this.#timerListComponent.updateTimers(timers);
             DomBuilder.Bootstrap.initTooltip('Refreshed: ' + toIso8601DateTime(date), this.#nodeRefresh);
+            Analytics.triggerFeatureUsed(Analytics.FEATURE_APP_INITIALIZED);
         }).catch(reason => {
             console.log(reason);
             this.#timerListComponent.showError('Error loading timers');

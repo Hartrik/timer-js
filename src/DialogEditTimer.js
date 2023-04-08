@@ -49,7 +49,7 @@ export class DialogEditTimer {
             }));
         }
         dialog.addButton(DomBuilder.link('Ok', { class: 'btn btn-primary btn-ok' }, () => {
-            this.#dataManager.putTimer(form.getTimer());
+            this.#dataManager.putTimer(form.getTimer(), this.#createNew);
             dialog.hide();
         }));
         dialog.show($(this.#context.dialogAnchorSelector));
