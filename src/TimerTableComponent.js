@@ -5,6 +5,8 @@ import { DialogEditTimer } from "./DialogEditTimer.js";
 import { DomBuilder } from "./DomBuilder.js";
 import { Timer } from "./Timer.js";
 import { escapeHtml } from "./utils.js";
+import moment from 'moment';
+import 'moment-precise-range-plugin';
 
 /**
  *

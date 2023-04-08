@@ -1,6 +1,6 @@
-import { Context } from "./Context.js";
-import { Persistence } from "./Persistence.js";
-import { Timer } from "./Timer.js";
+import { Context } from "../Context.js";
+import { Persistence } from "../Persistence.js";
+import { Timer } from "../Timer.js";
 
 /**
  *
