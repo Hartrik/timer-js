@@ -8,9 +8,12 @@ import { escapeHtml } from "./utils.js";
 import moment from 'moment';
 import 'moment-precise-range-plugin';
 
+import ICON_EDIT from '../assets/pencil-square.svg'
+import ICON_DELETE from '../assets/trash-fill.svg'
+
 /**
  *
- * @version 2022-03-19
+ * @version 2023-04-10
  * @author Patrik Harag
  */
 export class TimerTableComponent {
@@ -140,8 +143,10 @@ class TimerTableRowComponent {
 
         let cellRight = DomBuilder.element('td', { class: 'd-none d-sm-block timer-cell-right' })
             .append(DomBuilder.element('span')
-                .append(DomBuilder.link('', { class: 'fa fa-edit' }, (e) => this.#showEditDialog()))
-                .append(DomBuilder.link('', { class: 'fa fa-trash' }, (e) => this.#showDeleteDialog())));
+                .append(DomBuilder.link(DomBuilder.create(ICON_EDIT), { class: 'icon' },
+                    (e) => this.#showEditDialog()))
+                .append(DomBuilder.link(DomBuilder.create(ICON_DELETE), { class: 'icon' },
+                    (e) => this.#showDeleteDialog())));
 
         return DomBuilder.element('tr', { class: 'timer-row' })
             .append(cellLeft)

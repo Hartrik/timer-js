@@ -1,5 +1,6 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import svg from 'rollup-plugin-svg';
 import pkg from './package.json';
 
 export default [
@@ -15,6 +16,7 @@ export default [
         plugins: [
             resolve(), // so Rollup can find libraries
             commonjs(), // so Rollup can convert libraries to an ES modules
+            svg()
         ]
     },
 
@@ -28,7 +30,8 @@ export default [
         },
         plugins: [
             resolve(), // so Rollup can find libraries
-            commonjs() // so Rollup can convert libraries to an ES modules
+            commonjs(), // so Rollup can convert libraries to an ES modules
+            svg()
         ]
     }
 ];

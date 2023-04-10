@@ -8,6 +8,9 @@ import {
     toIso8601DateTime
 } from "./utils.js";
 
+import ICON_CALENDAR from '../assets/calendar2-event.svg'
+import ICON_CLOCK from '../assets/clock.svg'
+
 /**
  *
  * @version 2022-03-19
@@ -58,7 +61,7 @@ export class DialogEditTimer {
 
 /**
  *
- * @version 2022-03-26
+ * @version 2023-04-10
  * @author Patrik Harag
  */
 class TimerForm {
@@ -154,8 +157,8 @@ class TimerForm {
         return DomBuilder.div({ class: 'timer-time-toolbar' }, [
             DomBuilder.div({ class: 'timer-time-toolbar-list' }, [
                 DomBuilder.div({ class: 'timer-time-toolbar-list-icon' }, [
-                    DomBuilder.element('span', { class: 'fa fa-calendar' }),
-                    DomBuilder.element('span', { class: 'fa fa-clock-o', style: 'margin-left: -0.5em;' })
+                    DomBuilder.element('span', { class: 'icon' }, DomBuilder.create(ICON_CALENDAR)),
+                    DomBuilder.element('span', { class: 'icon', style: 'margin-left: -0.5em;' }, DomBuilder.create(ICON_CLOCK))
                 ]),
                 DomBuilder.link('now', { class: 'badge badge-secondary' }, () => input.val(toIso8601DateTime(new Date()))),
                 DomBuilder.link('00:00', { class: 'badge badge-secondary' }, () => input.val(toIso8601DateTime(TimerForm.#dateLastH(0)))),
@@ -166,14 +169,14 @@ class TimerForm {
             ]),
             DomBuilder.div( { class: 'timer-time-toolbar-list' }, [
                 DomBuilder.div({ class: 'timer-time-toolbar-list-icon' }, [
-                    DomBuilder.element('span', { class: 'fa fa-calendar' }),
+                    DomBuilder.element('span', { class: 'icon' }, DomBuilder.create(ICON_CALENDAR)),
                 ]),
-                DomBuilder.link('-1 d', { class: 'badge badge-secondary' }, () => input.val(TimerForm.#dateAddStr(input.val(), -1, 0))),
-                DomBuilder.link('+1 d', { class: 'badge badge-secondary' }, () => input.val(TimerForm.#dateAddStr(input.val(), +1, 0))),
+                DomBuilder.link('-24 h', { class: 'badge badge-secondary' }, () => input.val(TimerForm.#dateAddStr(input.val(), -1, 0))),
+                DomBuilder.link('+24 h', { class: 'badge badge-secondary' }, () => input.val(TimerForm.#dateAddStr(input.val(), +1, 0))),
             ]),
             DomBuilder.div( { class: 'timer-time-toolbar-list' }, [
                 DomBuilder.div({ class: 'timer-time-toolbar-list-icon' }, [
-                    DomBuilder.element('span', { class: 'fa fa-clock-o' })
+                    DomBuilder.element('span', { class: 'icon' }, DomBuilder.create(ICON_CLOCK))
                 ]),
                 DomBuilder.link('-1 h', { class: 'badge badge-secondary' }, () => input.val(TimerForm.#dateAddStr(input.val(), 0, -1))),
                 DomBuilder.link('+1 h', { class: 'badge badge-secondary' }, () => input.val(TimerForm.#dateAddStr(input.val(), 0, +1))),

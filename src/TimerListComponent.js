@@ -5,9 +5,11 @@ import { Timer } from "./Timer.js";
 import { TimerTableComponent } from "./TimerTableComponent.js";
 import { DialogEditTimer } from "./DialogEditTimer.js";
 
+import ICON_PLUS from '../assets/plus-circle.svg'
+
 /**
  *
- * @version 2022-03-28
+ * @version 2023-04-10
  * @author Patrik Harag
  */
 export class TimerListComponent {
@@ -81,7 +83,7 @@ export class TimerListComponent {
         if (categoryName !== null) {
             this.#nodeTimerList.append(DomBuilder.div({ class: 'timers-list-header' }, [
                 DomBuilder.element('h2', null, categoryName),
-                DomBuilder.link('', { class: 'fa fa-plus' }, (e) => {
+                DomBuilder.link(DomBuilder.create(ICON_PLUS), { class: 'icon' }, (e) => {
                     let defaultTimer = Timer.asTimer({ category: timers[0].category });
                     let dialog = new DialogEditTimer(this.#context, this.#dataManager, defaultTimer);
                     dialog.show();
