@@ -121,6 +121,10 @@
     white-space: nowrap;
 }
 
+.timer-row .timer-cell-right .icon {
+    margin: 3px;
+}
+
 @media (min-width: 768px) {
     .timer-row .timer-cell-left .progress {
         margin-top: 3pt;
