@@ -43,7 +43,7 @@
 }
 
 .timers-list-header .icon {
-    padding: 0.25rem 0.75rem 0.25rem 0.75rem;
+    padding: 0 0.75rem 0 0.75rem;
 }
 
 .timers-list .table {
@@ -119,11 +119,6 @@
 
 .timer-row .timer-cell-right span {
     white-space: nowrap;
-}
-
-.timers-list-header .icon,
-.timer-row .timer-cell-right .icon {
-    margin: 3px;
 }
 
 @media (min-width: 768px) {
