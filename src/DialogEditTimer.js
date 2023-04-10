@@ -136,7 +136,7 @@ class TimerForm {
             type: 'text',
             class: 'form-control',
             maxlength: '32',
-            value: (this.#timer.triggered !== null ? toIso8601DateTime(new Date(this.#timer.triggered)) : '')
+            value: (this.#timer.triggered ? toIso8601DateTime(new Date(this.#timer.triggered)) : '')
         });
         this.#extractFunctions.push((t) => {
             let date = input.val();
