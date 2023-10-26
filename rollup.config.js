@@ -2,6 +2,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import svg from 'rollup-plugin-svg';
 import pkg from './package.json';
+import terser from '@rollup/plugin-terser';
 
 export default [
 
@@ -17,6 +18,23 @@ export default [
             resolve(), // so Rollup can find libraries
             commonjs(), // so Rollup can convert libraries to an ES modules
             svg()
+        ]
+    },
+
+    // browser-friendly UMD build - for public use - MINIMIZED
+    {
+        input: 'src/dist-public/main.js',
+        output: {
+            name: 'TimerJS',
+            file: pkg.browser_public_min,
+            format: 'umd'
+        },
+        plugins: [
+            resolve(), // so Rollup can find libraries
+            commonjs(), // so Rollup can convert libraries to an ES modules
+            svg(),
+
+            terser()
         ]
     },
 
