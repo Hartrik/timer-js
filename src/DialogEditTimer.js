@@ -13,7 +13,7 @@ import ICON_CLOCK from '../assets/clock.svg'
 
 /**
  *
- * @version 2022-03-19
+ * @version 2023-10-26
  * @author Patrik Harag
  */
 export class DialogEditTimer {
@@ -55,7 +55,7 @@ export class DialogEditTimer {
             this.#dataManager.putTimer(form.getTimer(), this.#createNew);
             dialog.hide();
         }));
-        dialog.show($(this.#context.dialogAnchorSelector));
+        dialog.show(this.#context.dialogAnchorNode);
     }
 }
 
@@ -160,26 +160,26 @@ class TimerForm {
                     DomBuilder.element('span', { class: 'icon' }, DomBuilder.create(ICON_CALENDAR)),
                     DomBuilder.element('span', { class: 'icon', style: 'margin-left: -0.5em;' }, DomBuilder.create(ICON_CLOCK))
                 ]),
-                DomBuilder.link('now', { class: 'badge badge-secondary' }, () => input.val(toIso8601DateTime(new Date()))),
-                DomBuilder.link('00:00', { class: 'badge badge-secondary' }, () => input.val(toIso8601DateTime(TimerForm.#dateLastH(0)))),
-                DomBuilder.link('08:00', { class: 'badge badge-secondary' }, () => input.val(toIso8601DateTime(TimerForm.#dateLastH(8)))),
-                DomBuilder.link('12:00', { class: 'badge badge-secondary' }, () => input.val(toIso8601DateTime(TimerForm.#dateLastH(12)))),
-                DomBuilder.link('19:00', { class: 'badge badge-secondary' }, () => input.val(toIso8601DateTime(TimerForm.#dateLastH(19)))),
-                DomBuilder.link('22:00', { class: 'badge badge-secondary' }, () => input.val(toIso8601DateTime(TimerForm.#dateLastH(22)))),
+                DomBuilder.button('now', { class: 'btn btn-secondary' }, () => input.val(toIso8601DateTime(new Date()))),
+                DomBuilder.button('00:00', { class: 'btn btn-secondary' }, () => input.val(toIso8601DateTime(TimerForm.#dateLastH(0)))),
+                DomBuilder.button('08:00', { class: 'btn btn-secondary' }, () => input.val(toIso8601DateTime(TimerForm.#dateLastH(8)))),
+                DomBuilder.button('12:00', { class: 'btn btn-secondary' }, () => input.val(toIso8601DateTime(TimerForm.#dateLastH(12)))),
+                DomBuilder.button('19:00', { class: 'btn btn-secondary' }, () => input.val(toIso8601DateTime(TimerForm.#dateLastH(19)))),
+                DomBuilder.button('22:00', { class: 'btn btn-secondary' }, () => input.val(toIso8601DateTime(TimerForm.#dateLastH(22)))),
             ]),
             DomBuilder.div( { class: 'timer-time-toolbar-list' }, [
                 DomBuilder.div({ class: 'timer-time-toolbar-list-icon' }, [
                     DomBuilder.element('span', { class: 'icon' }, DomBuilder.create(ICON_CALENDAR)),
                 ]),
-                DomBuilder.link('-24 h', { class: 'badge badge-secondary' }, () => input.val(TimerForm.#dateAddStr(input.val(), -1, 0))),
-                DomBuilder.link('+24 h', { class: 'badge badge-secondary' }, () => input.val(TimerForm.#dateAddStr(input.val(), +1, 0))),
+                DomBuilder.button('-24 h', { class: 'btn btn-secondary' }, () => input.val(TimerForm.#dateAddStr(input.val(), -1, 0))),
+                DomBuilder.button('+24 h', { class: 'btn btn-secondary' }, () => input.val(TimerForm.#dateAddStr(input.val(), +1, 0))),
             ]),
             DomBuilder.div( { class: 'timer-time-toolbar-list' }, [
                 DomBuilder.div({ class: 'timer-time-toolbar-list-icon' }, [
                     DomBuilder.element('span', { class: 'icon' }, DomBuilder.create(ICON_CLOCK))
                 ]),
-                DomBuilder.link('-1 h', { class: 'badge badge-secondary' }, () => input.val(TimerForm.#dateAddStr(input.val(), 0, -1))),
-                DomBuilder.link('+1 h', { class: 'badge badge-secondary' }, () => input.val(TimerForm.#dateAddStr(input.val(), 0, +1))),
+                DomBuilder.button('-1 h', { class: 'btn btn-secondary' }, () => input.val(TimerForm.#dateAddStr(input.val(), 0, -1))),
+                DomBuilder.button('+1 h', { class: 'btn btn-secondary' }, () => input.val(TimerForm.#dateAddStr(input.val(), 0, +1))),
             ])
         ]);
     }

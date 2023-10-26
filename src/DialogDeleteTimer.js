@@ -30,6 +30,6 @@ export class DialogDeleteTimer {
             this.#dataManager.deleteTimer(this.#timer);
             dialog.hide();
         }));
-        dialog.show($(this.#context.dialogAnchorSelector));
+        dialog.show(this.#context.dialogAnchorNode);
     }
 }

@@ -1,4 +1,6 @@
 
+import $ from "jquery";
+
 /**
  *
  * @version 2022-03-26

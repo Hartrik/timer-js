@@ -1,6 +1,6 @@
 
 /*
- * @version 2023-04-22
+ * @version 2023-10-26
  * @author Patrik Harag
  */
 
@@ -27,11 +27,17 @@
     margin: 0.5rem 0;
 }
 
-.timers-toolbar a {
+.timers-toolbar button {
     margin-right: 0.5em;
+
+    padding: 0.25em 0.4em;
+    font-size: 75%;
+    font-weight: 700;
+    border-radius: 0.25rem;
+    line-height: 1;
 }
 
-.timers-toolbar .custom-switch {
+.timers-toolbar .form-check {
     display: inline-block;
     margin-left: 6pt;
     margin-right: 12pt;
@@ -169,6 +175,15 @@
     margin-right: 0.5em;
 }
 
+.timer-time-toolbar .timer-time-toolbar-list button {
+    margin-right: 2pt;
+    padding: 0.25em 0.4em;
+    font-size: 75%;
+    font-weight: 700;
+    border-radius: 0.25rem;
+    line-height: 1;
+}
+
 .timer-time-toolbar .timer-time-toolbar-list .timer-time-toolbar-list-icon {
     display: inline-block;
     min-width: 2em;
@@ -185,10 +200,10 @@
     }
 }
 
-.modal-dialog .btn-primary {
+.modal-dialog .modal-footer .btn-primary {
     width: 100pt;
 }
 
-.modal-dialog .btn-secondary {
+.modal-dialog .modal-footer .btn-secondary {
     width: 60pt;
 }

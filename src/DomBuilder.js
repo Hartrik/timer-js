@@ -1,7 +1,9 @@
 
+import $ from "jquery";
+
 /**
  *
- * @version 2023-04-10
+ * @version 2023-04-28
  * @author Patrik Harag
  */
 export class DomBuilder {
@@ -9,7 +11,7 @@ export class DomBuilder {
     /**
      *
      * @param html {string}
-     * @return {JQuery<HTMLElement>}
+     * @return {jQuery<HTMLElement>}
      */
     static create(html) {
         return $(html);
@@ -19,8 +21,8 @@ export class DomBuilder {
      *
      * @param name {string}
      * @param attributes {object|null}
-     * @param content {null|string|JQuery<HTMLElement>|JQuery<HTMLElement>[]}
-     * @return {JQuery<HTMLElement>}
+     * @param content {null|string|jQuery<HTMLElement>|jQuery<HTMLElement>[]}
+     * @return {jQuery<HTMLElement>}
      */
     static element(name, attributes = null, content = null) {
         let element = $(`<${name}>`);
@@ -42,8 +44,8 @@ export class DomBuilder {
     /**
      *
      * @param attributes {object|null}
-     * @param content {null|JQuery<HTMLElement>|JQuery<HTMLElement>[]}
-     * @return {JQuery<HTMLElement>}
+     * @param content {null|jQuery<HTMLElement>|jQuery<HTMLElement>[]}
+     * @return {jQuery<HTMLElement>}
      */
     static div(attributes = null, content = null) {
         return DomBuilder.element('div', attributes, content);
@@ -52,8 +54,8 @@ export class DomBuilder {
     /**
      *
      * @param attributes {object|null}
-     * @param content {null|string|JQuery<HTMLElement>|JQuery<HTMLElement>[]}
-     * @return {JQuery<HTMLElement>}
+     * @param content {null|string|jQuery<HTMLElement>|jQuery<HTMLElement>[]}
+     * @return {jQuery<HTMLElement>}
      */
     static par(attributes = null, content = null) {
         return DomBuilder.element('p', attributes, content);
@@ -63,7 +65,7 @@ export class DomBuilder {
      *
      * @param text {string|null}
      * @param attributes {object|null}
-     * @return {JQuery<HTMLElement>}
+     * @return {jQuery<HTMLElement>}
      */
     static span(text = null, attributes = null) {
         return DomBuilder.element('span', attributes, text);
@@ -74,7 +76,7 @@ export class DomBuilder {
      * @param text {string}
      * @param attributes {object|null}
      * @param handler {function(e)}
-     * @return {JQuery<HTMLElement>}
+     * @return {jQuery<HTMLElement>}
      */
     static link(text, attributes = null, handler = null) {
         let link = DomBuilder.element('a', attributes, text);
@@ -84,28 +86,110 @@ export class DomBuilder {
         }
         return link;
     }
+
+    /**
+     *
+     * @param label {string|jQuery<HTMLElement>|jQuery<HTMLElement>[]}
+     * @param attributes {object|null}
+     * @param handler {function(e)}
+     * @return {jQuery<HTMLElement>}
+     */
+    static button(label, attributes = null, handler = null) {
+        if (attributes === null) {
+            attributes = {};
+        }
+        attributes['type'] = 'button';
+
+        let button = DomBuilder.element('button', attributes, label);
+        if (handler !== null) {
+            button.on("click", handler);
+        }
+        return button;
+    }
 }
 
 /**
  *
- * @version 2022-03-20
+ * @version 2023-10-26
  * @author Patrik Harag
  */
 DomBuilder.Bootstrap = class {
 
     /**
      *
-     * @param node {JQuery<HTMLElement>}
-     * @param text {string}
-     * @return {JQuery<HTMLElement>}
+     * @param headerContent {string|jQuery<HTMLElement>|jQuery<HTMLElement>[]}
+     * @param bodyContent {string|jQuery<HTMLElement>|jQuery<HTMLElement>[]}
+     * @param attributes {object|null}
+     * @return {jQuery<HTMLElement>}
      */
-    static initTooltip(text, node) {
-        node.tooltip('dispose');  // remove old one if present
+    static card(headerContent, bodyContent, attributes = null) {
+        if (attributes === null) {
+            attributes = {};
+        }
+        if (attributes.class === undefined) {
+            attributes.class = 'card';
+        }
+
+        let card = DomBuilder.div(attributes);
+
+        if (headerContent) {
+            card.append(DomBuilder.div({ class: 'card-header' }, headerContent));
+        }
+
+        card.append(DomBuilder.div({ class: 'card-body' }, bodyContent));
+        return card;
+    }
+
+    /**
+     *
+     * @param title {string}
+     * @param collapsed {boolean}
+     * @param bodyContent {string|jQuery<HTMLElement>|jQuery<HTMLElement>[]}
+     * @return {jQuery<HTMLElement>}
+     */
+    static cardCollapsable(title, collapsed, bodyContent) {
+        let id = 'collapsable_' + Math.floor(Math.random() * 999_999_999);
+
+        return DomBuilder.div({ class: 'card' }, [
+            DomBuilder.div({ class: 'card-header' }, [
+                DomBuilder.element('a', { class: 'card-link', 'data-toggle': 'collapse', href: '#' + id}, title)
+            ]),
+            DomBuilder.div({ id: id, class: (collapsed ? 'collapse' : 'collapse show') }, [
+                DomBuilder.div({ class: 'card-body' }, bodyContent)
+            ])
+        ]);
+    }
+
+    /**
+     *
+     * @param node {jQuery<HTMLElement>}
+     * @param content {string|jQuery<HTMLElement>}
+     * @return {jQuery<HTMLElement>}
+     */
+    static initTooltip(content, node) {
+        if (window.bootstrap === undefined) {
+            console.error('Bootstrap library not available');
+        }
+
+        if (window.bootstrap !== undefined) {
+            let old = window.bootstrap.Tooltip.getInstance(node[0]);
+            if (old) {
+                old.dispose();
+            }
+        }
 
         node.attr('data-toggle', 'tooltip');
         node.attr('data-placement', 'top');
-        node.attr('title', text);
-        node.tooltip();
+        if (typeof content === 'object') {
+            node.attr('data-html', 'true');
+            node.attr('title', content.html());
+        } else {
+            node.attr('title', content);
+        }
+
+        if (window.bootstrap !== undefined) {
+            new window.bootstrap.Tooltip(node[0]);
+        }
         return node;
     }
 
@@ -114,7 +198,7 @@ DomBuilder.Bootstrap = class {
      * @param text {string}
      * @param checked {boolean}
      * @param handler {function(boolean)}
-     * @return {JQuery<HTMLElement>}
+     * @return {jQuery<HTMLElement>}
      */
     static switchButton(text, checked, handler = null) {
         let id = 'switch-button_' + Math.floor(Math.random() * 999_999_999);
@@ -122,16 +206,16 @@ DomBuilder.Bootstrap = class {
         let switchInput = DomBuilder.element('input', {
             type: 'checkbox',
             id: id,
-            class: 'custom-control-input',
-            style: 'width: min-content;'
+            class: 'form-check-input',
+            role: 'switch'
         });
         if (checked) {
             switchInput.attr('checked', 'true');
         }
 
-        let control = DomBuilder.div({ class: 'custom-control custom-switch' }, [
+        let control = DomBuilder.div({ class: 'form-check form-switch' }, [
             switchInput,
-            DomBuilder.element('label', { class: 'custom-control-label', for: id }, text)
+            DomBuilder.element('label', { class: 'form-check-label', for: id }, text)
         ]);
 
         if (handler !== null) {
@@ -166,19 +250,32 @@ DomBuilder.BootstrapTable = class {
 
 /**
  *
- * @version 2022-03-18
+ * @version 2023-10-26
  * @author Patrik Harag
  */
 DomBuilder.BootstrapDialog = class {
+
+    // will be removed after close
+    #persistent = false;
 
     #headerNode = null;
     #bodyNode = null;
     #footerNodeChildren = [];
 
     #dialog = null;
+    #dialogBootstrap = null;
+
+
+    setPersistent(persistent) {
+        this.#persistent = persistent;
+    }
 
     setHeaderContent(headerNode) {
-        this.#headerNode = headerNode;
+        if (typeof headerNode === 'string') {
+            this.#headerNode = DomBuilder.element('strong', null, headerNode);
+        } else {
+            this.#headerNode = headerNode;
+        }
     }
 
     setBodyContent(bodyNode) {
@@ -186,8 +283,16 @@ DomBuilder.BootstrapDialog = class {
     }
 
     addCloseButton(buttonText) {
-        let button = $(`<button type="button" class="btn btn-secondary" data-dismiss="modal"></button>`)
+        let button = $(`<button type="button" class="btn btn-secondary" data-bs-dismiss="modal"></button>`)
             .text(buttonText);
+        this.#footerNodeChildren.push(button)
+    }
+
+    addSubmitButton(buttonText, handler) {
+        let button = $(`<button type="button" class="btn btn-primary" data-bs-dismiss="modal"></button>`)
+            .text(buttonText)
+            .on("click", handler);
+
         this.#footerNodeChildren.push(button)
     }
 
@@ -196,29 +301,40 @@ DomBuilder.BootstrapDialog = class {
     }
 
     show(dialogAnchor) {
-        this.#dialog = $(`<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>`)
-            .append($(`<div class="modal-dialog modal-dialog-centered"></div>`)
-                .append($(`<div class="modal-content"></div>`)
-                    .append($(`<div class="modal-header"></div>`).append(this.#headerNode))
-                    .append($(`<div class="modal-body"></div>`).append(this.#bodyNode))
-                    .append($(`<div class="modal-footer"></div>`).append(this.#footerNodeChildren))
-                )
-            );
+        if (window.bootstrap === undefined) {
+            console.error('Bootstrap library not available');
+            return;
+        }
 
-        // add into DOM
-        dialogAnchor.append(this.#dialog);
+        if (this.#dialog === null) {
+            this.#dialog = $(`<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>`)
+                .append($(`<div class="modal-dialog modal-dialog-centered"></div>`)
+                    .append($(`<div class="modal-content"></div>`)
+                        .append($(`<div class="modal-header"></div>`).append(this.#headerNode))
+                        .append($(`<div class="modal-body"></div>`).append(this.#bodyNode))
+                        .append($(`<div class="modal-footer"></div>`).append(this.#footerNodeChildren))
+                    )
+                );
 
-        // remove from DOM after hide
-        this.#dialog.on('hidden.bs.modal', () => {
-            this.#dialog.remove();
-        });
+            // add into DOM
+            dialogAnchor.append(this.#dialog);
+        }
 
-        this.#dialog.modal('show');
+        this.#dialogBootstrap = new window.bootstrap.Modal(this.#dialog[0]);
+
+        if (!this.#persistent) {
+            // remove from DOM after hide
+            this.#dialog[0].addEventListener('hidden.bs.modal', e => {
+                this.#dialog.remove();
+            })
+        }
+
+        this.#dialogBootstrap.show();
     }
 
     hide() {
         if (this.#dialog !== null) {
-            this.#dialog.modal('hide');
+            this.#dialogBootstrap.hide();
         }
     }
 }

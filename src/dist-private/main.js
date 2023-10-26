@@ -2,6 +2,7 @@
 import { Context } from "../Context.js";
 import { TimerTopComponent } from "../TimerTopComponent.js";
 import { PersistenceForPrivateUse } from "./PersistenceForPrivateUse.js";
+import $ from "jquery";
 
 export function builder() {
     return new Builder();
@@ -40,7 +41,8 @@ class Builder {
             throw 'CSRF token not set';
         }
 
-        let context = new Context($(this.#dialogAnchorSelector), this.#csrfParameterName, this.#csrfToken);
+        let dialogAnchorNode = $(this.#dialogAnchorSelector);
+        let context = new Context(dialogAnchorNode, this.#csrfParameterName, this.#csrfToken);
         let persistence = new PersistenceForPrivateUse(context);
         let component = new TimerTopComponent(context, persistence);
         component.disableSaveSwitch();

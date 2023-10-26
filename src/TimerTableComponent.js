@@ -141,7 +141,7 @@ class TimerTableRowComponent {
             });
         });
 
-        let cellRight = DomBuilder.element('td', { class: 'd-none d-sm-block timer-cell-right' })
+        let cellRight = DomBuilder.element('td', { class: 'd-none d-sm-table-cell timer-cell-right' })
             .append(DomBuilder.element('span')
                 .append(DomBuilder.link(DomBuilder.create(ICON_EDIT), { class: 'icon' },
                     (e) => this.#showEditDialog()))
