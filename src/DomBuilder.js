@@ -110,10 +110,21 @@ export class DomBuilder {
 
 /**
  *
- * @version 2023-10-26
+ * @version 2023-10-27
  * @author Patrik Harag
  */
 DomBuilder.Bootstrap = class {
+
+    /**
+     *
+     * @param bodyContent {string|jQuery<HTMLElement>|jQuery<HTMLElement>[]}
+     * @return {jQuery<HTMLElement>}
+     */
+    static alertInfo(bodyContent) {
+        return $(`<div class="alert alert-info alert-dismissible fade show" role="alert"></div>`)
+            .append(bodyContent)
+            .append($(`<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`));
+    }
 
     /**
      *
@@ -152,7 +163,7 @@ DomBuilder.Bootstrap = class {
 
         return DomBuilder.div({ class: 'card' }, [
             DomBuilder.div({ class: 'card-header' }, [
-                DomBuilder.element('a', { class: 'card-link', 'data-toggle': 'collapse', href: '#' + id}, title)
+                DomBuilder.element('a', { class: 'card-link', 'data-bs-toggle': 'collapse', href: '#' + id}, title)
             ]),
             DomBuilder.div({ id: id, class: (collapsed ? 'collapse' : 'collapse show') }, [
                 DomBuilder.div({ class: 'card-body' }, bodyContent)
@@ -178,10 +189,10 @@ DomBuilder.Bootstrap = class {
             }
         }
 
-        node.attr('data-toggle', 'tooltip');
-        node.attr('data-placement', 'top');
+        node.attr('data-bs-toggle', 'tooltip');
+        node.attr('data-bs-placement', 'top');
         if (typeof content === 'object') {
-            node.attr('data-html', 'true');
+            node.attr('data-bs-html', 'true');
             node.attr('title', content.html());
         } else {
             node.attr('title', content);
@@ -226,11 +237,40 @@ DomBuilder.Bootstrap = class {
         }
         return control;
     }
+
+    /**
+     *
+     * @param labelContent {string|jQuery<HTMLElement>}
+     * @param buttonClass {string} e.g. btn-primary
+     * @param checked {boolean}
+     * @param handler {function(boolean)}
+     * @return {jQuery<HTMLElement>[]}
+     */
+    static toggleButton(labelContent, buttonClass, checked, handler = null) {
+        let id = 'toggle-button_' + Math.floor(Math.random() * 999_999_999);
+
+        let nodeInput = DomBuilder.element('input', {
+            type: 'checkbox',
+            class: 'btn-check',
+            checked: checked,
+            id: id
+        });
+        let nodeLabel = DomBuilder.element('label', {
+            class: 'btn ' + buttonClass,
+            for: id
+        }, labelContent)
+
+        nodeInput.change((e) => {
+            handler(nodeInput.prop('checked'));
+        });
+
+        return [nodeInput, nodeLabel];
+    }
 }
 
 /**
  *
- * @version 2022-03-18
+ * @version 2023-04-02
  * @author Patrik Harag
  */
 DomBuilder.BootstrapTable = class {
@@ -239,6 +279,10 @@ DomBuilder.BootstrapTable = class {
 
     addRow(row) {
         this.#tableBody.append(row);
+    }
+
+    addRowBefore(row) {
+        this.#tableBody.prepend(row);
     }
 
     createNode() {
@@ -250,13 +294,15 @@ DomBuilder.BootstrapTable = class {
 
 /**
  *
- * @version 2023-10-26
+ * @version 2023-10-27
  * @author Patrik Harag
  */
 DomBuilder.BootstrapDialog = class {
 
     // will be removed after close
     #persistent = false;
+
+    #additionalStyle = '';
 
     #headerNode = null;
     #bodyNode = null;
@@ -268,6 +314,14 @@ DomBuilder.BootstrapDialog = class {
 
     setPersistent(persistent) {
         this.#persistent = persistent;
+    }
+
+    setSizeLarge() {
+        this.#additionalStyle = 'modal-lg';
+    }
+
+    setSizeExtraLarge() {
+        this.#additionalStyle = 'modal-xl';
     }
 
     setHeaderContent(headerNode) {
@@ -308,7 +362,7 @@ DomBuilder.BootstrapDialog = class {
 
         if (this.#dialog === null) {
             this.#dialog = $(`<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>`)
-                .append($(`<div class="modal-dialog modal-dialog-centered"></div>`)
+                .append($(`<div class="modal-dialog modal-dialog-centered ${this.#additionalStyle}"></div>`)
                     .append($(`<div class="modal-content"></div>`)
                         .append($(`<div class="modal-header"></div>`).append(this.#headerNode))
                         .append($(`<div class="modal-body"></div>`).append(this.#bodyNode))
@@ -335,6 +389,8 @@ DomBuilder.BootstrapDialog = class {
     hide() {
         if (this.#dialog !== null) {
             this.#dialogBootstrap.hide();
+            this.#dialog = null;
+            this.#dialogBootstrap = null;
         }
     }
 }
