@@ -39,7 +39,7 @@ export class DialogEditTimer {
         let form = new TimerForm(this.#timer);
 
         let dialog = new DomBuilder.BootstrapDialog();
-        dialog.setHeaderContent(DomBuilder.element('h2', null, this.#createNew ? 'Create timer' : 'Edit timer'));
+        dialog.setHeaderContent(this.#createNew ? 'Create timer' : 'Edit timer');
         dialog.setBodyContent(form.createNode());
         dialog.addCloseButton('Cancel');
         if (!this.#createNew) {

@@ -23,7 +23,7 @@ export class DialogDeleteTimer {
 
     show() {
         let dialog = new DomBuilder.BootstrapDialog();
-        dialog.setHeaderContent(DomBuilder.element('h2', null, 'Warning'));
+        dialog.setHeaderContent('Warning');
         dialog.setBodyContent(DomBuilder.span('Are you sure?'));
         dialog.addCloseButton('Cancel');
         dialog.addButton(DomBuilder.link('Remove', { class: 'btn btn-danger' }, () => {
