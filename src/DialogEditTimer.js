@@ -61,7 +61,7 @@ export class DialogEditTimer {
 
 /**
  *
- * @version 2023-04-10
+ * @version 2023-10-27
  * @author Patrik Harag
  */
 class TimerForm {
@@ -76,26 +76,16 @@ class TimerForm {
     }
 
     createNode() {
-        return DomBuilder.element('form', { class: 'form-vertical' }, [
-            DomBuilder.element('fieldset', null, [
-                DomBuilder.div({ class: 'form-row col-md-12' }, [
-                    DomBuilder.div({ class: 'form-group col-md-12' }, this.#createDescription())
-                ]),
-                DomBuilder.div({ class: 'form-row col-md-12' }, [
-                    DomBuilder.div({ class: 'form-group col-md-12' }, this.#createCategory())
-                ]),
-                DomBuilder.div({ class: 'form-row col-md-12' }, [
-                    DomBuilder.div({ class: 'form-group col-md-12' }, this.#createLimit())
-                ]),
-                DomBuilder.div({ class: 'form-row col-md-12' }, [
-                    DomBuilder.div({ class: 'form-group col-md-12' }, this.#createTriggered())
-                ])
-            ])
+        return DomBuilder.div(null, [
+            DomBuilder.div({ class: 'mb-3' }, this.#createDescription()),
+            DomBuilder.div({ class: 'mb-3' }, this.#createCategory()),
+            DomBuilder.div({ class: 'mb-3' }, this.#createLimit()),
+            DomBuilder.div({ class: 'mb-3' }, this.#createTriggered())
         ]);
     }
 
     #createDescription() {
-        let label = DomBuilder.element('label', null, 'Description')
+        let label = DomBuilder.element('label', { class: 'form-label' }, 'Description')
         let input = DomBuilder.element('input', {
             type: 'text',
             class: 'form-control',
@@ -108,7 +98,7 @@ class TimerForm {
     }
 
     #createCategory() {
-        let label = DomBuilder.element('label', null, 'Category')
+        let label = DomBuilder.element('label', { class: 'form-label' }, 'Category')
         let input = DomBuilder.element('input', {
             type: 'text',
             class: 'form-control',
@@ -121,7 +111,7 @@ class TimerForm {
     }
 
     #createLimit() {
-        let label = DomBuilder.element('label', null, 'Limit (days)')
+        let label = DomBuilder.element('label', { class: 'form-label' }, 'Limit (days)')
         let input = DomBuilder.element('input', {
             type: 'number', min: '0',
             class: 'form-control',
@@ -134,7 +124,7 @@ class TimerForm {
     }
 
     #createTriggered() {
-        let label = DomBuilder.element('label', null, 'Last Triggered')
+        let label = DomBuilder.element('label', { class: 'form-label' }, 'Last Triggered')
         let input = DomBuilder.element('input', {
             type: 'text',
             class: 'form-control',
