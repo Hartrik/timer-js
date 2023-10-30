@@ -2,7 +2,7 @@
 import { Context } from "../Context.js";
 import { TimerTopComponent } from "../TimerTopComponent.js";
 import { PersistenceForPrivateUse } from "./PersistenceForPrivateUse.js";
-import $ from "jquery";
+import { DomBuilder } from "../DomBuilder.js";
 
 export function builder() {
     return new Builder();
@@ -10,19 +10,13 @@ export function builder() {
 
 /**
  *
- * @version 2023-04-08
+ * @version 2023-10-30
  * @author Patrik Harag
  */
 class Builder {
 
-    #dialogAnchorSelector;
     #csrfParameterName;
     #csrfToken;
-
-    setDialogAnchor(dialogAnchorSelector) {
-        this.#dialogAnchorSelector = dialogAnchorSelector;
-        return this;
-    }
 
     setCsrf(csrfParameterName, csrfToken) {
         this.#csrfParameterName = csrfParameterName;
@@ -31,9 +25,6 @@ class Builder {
     }
 
     build() {
-        if (!this.#dialogAnchorSelector) {
-            throw 'Dialog anchor not set';
-        }
         if (!this.#csrfParameterName) {
             throw 'CSRF parameter name not set';
         }
@@ -41,14 +32,17 @@ class Builder {
             throw 'CSRF token not set';
         }
 
-        let dialogAnchorNode = $(this.#dialogAnchorSelector);
-        let context = new Context(dialogAnchorNode, this.#csrfParameterName, this.#csrfToken);
-        let persistence = new PersistenceForPrivateUse(context);
-        let component = new TimerTopComponent(context, persistence);
+        const dialogAnchorNode = DomBuilder.div({ class: 'timer-dialog-anchor' });
+        document.body.prepend(dialogAnchorNode[0]);
+
+        const context = new Context(dialogAnchorNode, this.#csrfParameterName, this.#csrfToken);
+        const persistence = new PersistenceForPrivateUse(context);
+        const component = new TimerTopComponent(context, persistence);
         component.disableSaveSwitch();
         component.enablePeriodicalRefresh(5);
         setTimeout(() => component.refresh());
 
-        return component.createNode();
+        const node = component.createNode();
+        return node[0];
     }
 }

@@ -1,6 +1,6 @@
 
 /*
- * @version 2023-10-26
+ * @version 2023-10-30
  * @author Patrik Harag
  */
 
@@ -200,10 +200,10 @@
     }
 }
 
-.modal-dialog .modal-footer .btn-primary {
+.timer-dialog-anchor .modal-dialog .modal-footer .btn-primary {
     width: 100pt;
 }
 
-.modal-dialog .modal-footer .btn-secondary {
+.timer-dialog-anchor .modal-dialog .modal-footer .btn-secondary {
     width: 60pt;
 }

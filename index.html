@@ -48,19 +48,17 @@
   <script>
       document.addEventListener('DOMContentLoaded', () => {
           let node = TimerJS.builder()
-              .setDialogAnchor('#dialog-anchor')
               .setCsrf('_csrf', 'e8010a06-abc5-4634-8c9f-0235c12e3aad')
               .build();
 
-          document.getElementById('timer-top-component').appendChild(node[0]);
+          document.getElementById('app-wrapper').appendChild(node);
       });
   </script>
 </head>
 <body>
 <main role="main" class="container" style="max-width: 1140px;">
   <h1>Timer</h1>
-  <div id="dialog-anchor"></div>
-  <div id="timer-top-component"></div>
+  <div id="app-wrapper"></div>
 </main>
 </body>
 </html>
