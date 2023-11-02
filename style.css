@@ -1,6 +1,6 @@
 
 /*
- * @version 2023-10-30
+ * @version 2023-11-02
  * @author Patrik Harag
  */
 
@@ -27,20 +27,15 @@
     margin: 0.5rem 0;
 }
 
-.timers-toolbar button {
+.timers-toolbar .btn {
     margin-right: 0.5em;
-
-    padding: 0.25em 0.4em;
-    font-size: 75%;
-    font-weight: 700;
-    border-radius: 0.25rem;
-    line-height: 1;
 }
 
 .timers-toolbar .form-check {
     display: inline-block;
     margin-left: 6pt;
     margin-right: 12pt;
+    font-size: 14px;
 }
 
 .timers-list-header {

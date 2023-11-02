@@ -15,7 +15,7 @@ import {
 
 /**
  *
- * @version 2023-10-26
+ * @version 2023-11-02
  * @author Patrik Harag
  */
 export class TimerTopComponent {
@@ -32,7 +32,7 @@ export class TimerTopComponent {
 
     #enableSaveSwitch = true;
 
-    #nodeRefresh = DomBuilder.button('Refresh', { class: 'btn btn-secondary' }, () => this.refresh());
+    #nodeRefresh = DomBuilder.button('Refresh', { class: 'btn btn-sm btn-secondary' }, () => this.refresh());
 
     /**
      *
@@ -65,22 +65,22 @@ export class TimerTopComponent {
     createNode() {
         return DomBuilder.div({ class: 'timer-component' }, [
             DomBuilder.div({ class: 'timers-toolbar' }, [
-                DomBuilder.button('Create Timer', { class: 'btn btn-secondary' }, e => {
+                DomBuilder.button('Add', { class: 'btn btn-sm btn-secondary' }, e => {
                     let dialog = new DialogEditTimer(this.#context, this.#dataManager, new Timer());
                     dialog.show();
                 }),
                 this.#nodeRefresh,
-                (this.#enableSaveSwitch ? this.#createSaveSwitch() : null),
-                DomBuilder.button('Export', { class: 'btn btn-light' }, e => {
+                DomBuilder.button('Export', { class: 'btn btn-sm btn-light' }, e => {
                     this.#dataManager.exportAsJSON(timers => {
                         downloadJSON(timers, `timers_${ toIso8601Date(new Date()) }.json`);
                     });
                 }),
-                DomBuilder.button('Import', { class: 'btn btn-light' }, e => {
+                DomBuilder.button('Import', { class: 'btn btn-sm btn-light' }, e => {
                     uploadFileAsText((name, content) => {
                         this.#dataManager.importFromJSON(content);
                     });
                 }),
+                (this.#enableSaveSwitch ? this.#createSaveSwitch() : null)
             ]),
             this.#timerListComponent.createNode()
         ]);
