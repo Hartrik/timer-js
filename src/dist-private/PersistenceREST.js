@@ -5,10 +5,10 @@ import $ from "jquery";
 
 /**
  *
- * @version 2022-03-28
+ * @version 2023-11-02
  * @author Patrik Harag
  */
-export class PersistenceForPrivateUse extends Persistence {
+export class PersistenceREST extends Persistence {
 
     #context;
 

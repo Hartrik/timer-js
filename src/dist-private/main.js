@@ -1,7 +1,7 @@
 
 import { Context } from "../Context.js";
 import { TimerTopComponent } from "../TimerTopComponent.js";
-import { PersistenceForPrivateUse } from "./PersistenceForPrivateUse.js";
+import { PersistenceREST } from "./PersistenceREST.js";
 import { DomBuilder } from "../DomBuilder.js";
 
 export function builder() {
@@ -36,7 +36,7 @@ class Builder {
         document.body.prepend(dialogAnchorNode[0]);
 
         const context = new Context(dialogAnchorNode, this.#csrfParameterName, this.#csrfToken);
-        const persistence = new PersistenceForPrivateUse(context);
+        const persistence = new PersistenceREST(context);
         const component = new TimerTopComponent(context, persistence);
         component.disableSaveSwitch();
         component.enablePeriodicalRefresh(5);

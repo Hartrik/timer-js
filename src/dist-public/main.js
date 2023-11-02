@@ -1,8 +1,8 @@
 
 import { Context } from "../Context.js";
-import { Persistence } from "../Persistence.js";
 import { TimerTopComponent } from "../TimerTopComponent.js";
 import { DomBuilder } from "../DomBuilder.js";
+import { PersistenceLocalStorage } from "./PersistenceLocalStorage.js";
 
 export function builder() {
     return new Builder();
@@ -36,7 +36,7 @@ class Builder {
         document.body.prepend(dialogAnchorNode[0]);
 
         const context = new Context(dialogAnchorNode, this.#csrfParameterName, this.#csrfToken);
-        const persistence = Persistence.createForPublicUse();
+        const persistence = new PersistenceLocalStorage();
         const component = new TimerTopComponent(context, persistence);
         component.enablePeriodicalRefresh(3);
         setTimeout(() => component.refresh());
