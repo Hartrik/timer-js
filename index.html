@@ -48,7 +48,7 @@
   <script>
       document.addEventListener('DOMContentLoaded', () => {
           let node = TimerJS.builder()
-              .setCsrf('_csrf', 'e8010a06-abc5-4634-8c9f-0235c12e3aad')
+              .setPersistenceLocalStorage()
               .build();
 
           document.getElementById('app-wrapper').appendChild(node);

@@ -1,32 +1,51 @@
-import { Context } from "./Context.js";
-import { Timer } from "./Timer.js";
-import { Persistence } from "./Persistence.js";
-import { Analytics } from "./Analytics.js";
+import { Timer } from "./Timer";
+import { Persistence } from "./Persistence";
+import { Analytics } from "./Analytics";
 
 /**
  *
- * @version 2022-03-26
+ * @version 2023-11-16
  * @author Patrik Harag
  */
-export class DataManager {
+export class Controller {
 
-    /** @type {Context} */
-    #context;
+    /** @type {jQuery<HTMLElement>} */
+    #dialogAnchorNode;
     /** @type {Persistence} */
     #persistence;
-    /** @type {function(Promise)} */
-    #updateFunction;
+    /** @type {function(Timer[])[]} */
+    #onUpdateHandlers = [];
+    /** @type {function(any)[]} */
+    #onUpdateFailedHandlers = [];
 
     /**
      *
-     * @param context {Context}
-     * @param updateFunction {function(Promise)}
+     * @param dialogAnchorNode
      * @param persistence {Persistence}
      */
-    constructor(context, persistence, updateFunction) {
+    constructor(dialogAnchorNode, persistence) {
         this.#persistence = persistence;
-        this.#context = context;
-        this.#updateFunction = updateFunction;
+        this.#dialogAnchorNode = dialogAnchorNode;
+
+        this.addOnUpdateFailedHandler(e => {
+            console.log(e);
+        });
+    }
+
+    getDialogAnchor() {
+        return this.#dialogAnchorNode;
+    }
+
+    addOnUpdateHandler(handler) {
+        this.#onUpdateHandlers.push(handler);
+    }
+
+    addOnUpdateFailedHandler(handler) {
+        this.#onUpdateFailedHandlers.push(handler);
+    }
+
+    getPersistence() {
+        return this.#persistence;
     }
 
     /**
@@ -80,6 +99,14 @@ export class DataManager {
     }
 
     reload() {
-        this.#updateFunction(this.#persistence.getTimers());
+        this.#persistence.getTimers().then(timers => {
+            for (let handler of this.#onUpdateHandlers) {
+                handler(timers);
+            }
+        }).catch(reason => {
+            for (let handler of this.#onUpdateFailedHandlers) {
+                handler(reason);
+            }
+        });
     }
 }

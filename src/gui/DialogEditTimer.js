@@ -1,37 +1,30 @@
-import { Context } from "./Context.js";
-import { DataManager } from "./DataManager.js";
-import { DomBuilder } from "./DomBuilder.js";
-import { DialogDeleteTimer } from "./DialogDeleteTimer.js";
-import { Timer } from "./Timer.js";
-import {
-    fromIso8601,
-    toIso8601DateTime
-} from "./utils.js";
+import { Controller } from "../Controller";
+import { DomBuilder } from "./DomBuilder";
+import { DialogDeleteTimer } from "./DialogDeleteTimer";
+import { Timer } from "../Timer";
+import { TimeUtils } from "../TimeUtils";
 
-import ICON_CALENDAR from '../assets/calendar2-event.svg'
-import ICON_CLOCK from '../assets/clock.svg'
+import ICON_CALENDAR from '../../assets/calendar2-event.svg'
+import ICON_CLOCK from '../../assets/clock.svg'
 
 /**
  *
- * @version 2023-10-26
+ * @version 2023-11-16
  * @author Patrik Harag
  */
 export class DialogEditTimer {
 
-    /** @type {Context} */
-    #context;
-    /** @type {DataManager} */
-    #dataManager;
+    /** @type {Controller} */
+    #controller;
 
     /** @type {Timer} */
     #timer;
     /** @type {boolean} */
     #createNew;
 
-    constructor(context, dataManager, timer) {
-        this.#dataManager = dataManager;
+    constructor(controller, timer) {
+        this.#controller = controller;
         this.#timer = timer;
-        this.#context = context;
         this.#createNew = (timer.id == null)
     }
 
@@ -46,16 +39,16 @@ export class DialogEditTimer {
             dialog.addButton(DomBuilder.link('Remove', { class: 'btn btn-danger' }, () => {
                 dialog.hide();
                 setTimeout(() => {
-                    let deleteDialog = new DialogDeleteTimer(this.#context, this.#dataManager, this.#timer);
+                    let deleteDialog = new DialogDeleteTimer(this.#controller, this.#timer);
                     deleteDialog.show();
                 }, 500);
             }));
         }
         dialog.addButton(DomBuilder.link('Ok', { class: 'btn btn-primary btn-ok' }, () => {
-            this.#dataManager.putTimer(form.getTimer(), this.#createNew);
+            this.#controller.putTimer(form.getTimer(), this.#createNew);
             dialog.hide();
         }));
-        dialog.show(this.#context.dialogAnchorNode);
+        dialog.show(this.#controller.getDialogAnchor());
     }
 }
 
@@ -129,11 +122,11 @@ class TimerForm {
             type: 'text',
             class: 'form-control',
             maxlength: '32',
-            value: (this.#timer.triggered ? toIso8601DateTime(new Date(this.#timer.triggered)) : '')
+            value: (this.#timer.triggered ? TimeUtils.toIso8601DateTime(new Date(this.#timer.triggered)) : '')
         });
         this.#extractFunctions.push((t) => {
             let date = input.val();
-            t.triggered = (date !== '') ? fromIso8601(date).valueOf() : null;
+            t.triggered = (date !== '') ? TimeUtils.fromIso8601(date).valueOf() : null;
         });
 
         return [
@@ -150,12 +143,12 @@ class TimerForm {
                     DomBuilder.element('span', { class: 'icon' }, DomBuilder.create(ICON_CALENDAR)),
                     DomBuilder.element('span', { class: 'icon', style: 'margin-left: -0.5em;' }, DomBuilder.create(ICON_CLOCK))
                 ]),
-                DomBuilder.button('now', { class: 'btn btn-secondary' }, () => input.val(toIso8601DateTime(new Date()))),
-                DomBuilder.button('00:00', { class: 'btn btn-secondary' }, () => input.val(toIso8601DateTime(TimerForm.#dateLastH(0)))),
-                DomBuilder.button('08:00', { class: 'btn btn-secondary' }, () => input.val(toIso8601DateTime(TimerForm.#dateLastH(8)))),
-                DomBuilder.button('12:00', { class: 'btn btn-secondary' }, () => input.val(toIso8601DateTime(TimerForm.#dateLastH(12)))),
-                DomBuilder.button('19:00', { class: 'btn btn-secondary' }, () => input.val(toIso8601DateTime(TimerForm.#dateLastH(19)))),
-                DomBuilder.button('22:00', { class: 'btn btn-secondary' }, () => input.val(toIso8601DateTime(TimerForm.#dateLastH(22)))),
+                DomBuilder.button('now', { class: 'btn btn-secondary' }, () => input.val(TimeUtils.toIso8601DateTime(new Date()))),
+                DomBuilder.button('00:00', { class: 'btn btn-secondary' }, () => input.val(TimeUtils.toIso8601DateTime(TimerForm.#dateLastH(0)))),
+                DomBuilder.button('08:00', { class: 'btn btn-secondary' }, () => input.val(TimeUtils.toIso8601DateTime(TimerForm.#dateLastH(8)))),
+                DomBuilder.button('12:00', { class: 'btn btn-secondary' }, () => input.val(TimeUtils.toIso8601DateTime(TimerForm.#dateLastH(12)))),
+                DomBuilder.button('19:00', { class: 'btn btn-secondary' }, () => input.val(TimeUtils.toIso8601DateTime(TimerForm.#dateLastH(19)))),
+                DomBuilder.button('22:00', { class: 'btn btn-secondary' }, () => input.val(TimeUtils.toIso8601DateTime(TimerForm.#dateLastH(22)))),
             ]),
             DomBuilder.div( { class: 'timer-time-toolbar-list' }, [
                 DomBuilder.div({ class: 'timer-time-toolbar-list-icon' }, [
@@ -196,12 +189,12 @@ class TimerForm {
     }
 
     static #dateAddStr(strDate, daysToAdd, hoursToAdd) {
-        let d = fromIso8601(strDate);
+        let d = TimeUtils.fromIso8601(strDate);
         if (isNaN(d)) {
             // cannot parse date
             return strDate;
         } else {
-            return toIso8601DateTime(TimerForm.#dateAdd(d, daysToAdd, hoursToAdd));
+            return TimeUtils.toIso8601DateTime(TimerForm.#dateAdd(d, daysToAdd, hoursToAdd));
         }
     }
 

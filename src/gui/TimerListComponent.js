@@ -1,11 +1,10 @@
-import { Context } from "./Context.js";
-import { DataManager } from "./DataManager.js";
-import { DomBuilder } from "./DomBuilder.js";
-import { Timer } from "./Timer.js";
-import { TimerTableComponent } from "./TimerTableComponent.js";
-import { DialogEditTimer } from "./DialogEditTimer.js";
+import { Controller } from "../Controller";
+import { DomBuilder } from "./DomBuilder";
+import { Timer } from "../Timer";
+import { TimerTableComponent } from "./TimerTableComponent";
+import { DialogEditTimer } from "./DialogEditTimer";
 
-import ICON_PLUS from '../assets/plus-circle.svg'
+import ICON_PLUS from '../../assets/plus-circle.svg'
 
 /**
  *
@@ -14,21 +13,17 @@ import ICON_PLUS from '../assets/plus-circle.svg'
  */
 export class TimerListComponent {
 
-    /** @type {Context} */
-    #context;
-    /** @type {DataManager} */
-    #dataManager;
+    /** @type {Controller} */
+    #controller;
 
     #nodeTimerList = DomBuilder.div({ class: 'timers-list' });
 
     /**
      *
-     * @param context {Context}
-     * @param dataManager {DataManager}
+     * @param controller {Controller}
      */
-    constructor(context, dataManager) {
-        this.#context = context;
-        this.#dataManager = dataManager;
+    constructor(controller) {
+        this.#controller = controller;
     }
 
     showError(text) {
@@ -78,14 +73,14 @@ export class TimerListComponent {
     }
 
     #addList(categoryName, timers) {
-        let component = new TimerTableComponent(this.#context, this.#dataManager, timers);
+        let component = new TimerTableComponent(this.#controller, timers);
 
         if (categoryName !== null) {
             this.#nodeTimerList.append(DomBuilder.div({ class: 'timers-list-header' }, [
                 DomBuilder.element('h2', null, categoryName),
                 DomBuilder.link(DomBuilder.create(ICON_PLUS), { class: 'icon' }, (e) => {
                     let defaultTimer = Timer.asTimer({ category: timers[0].category });
-                    let dialog = new DialogEditTimer(this.#context, this.#dataManager, defaultTimer);
+                    let dialog = new DialogEditTimer(this.#controller, defaultTimer);
                     dialog.show();
                 })
             ]));

@@ -1,24 +1,24 @@
-import { Context } from "../Context.js";
-import { Persistence } from "../Persistence.js";
-import { Timer } from "../Timer.js";
+import { Persistence } from "./Persistence";
+import { Timer } from "./Timer";
 import $ from "jquery";
 
 /**
  *
- * @version 2023-11-02
+ * @version 2023-11-16
  * @author Patrik Harag
  */
 export class PersistenceREST extends Persistence {
 
-    #context;
+    #urlBase;
 
-    /**
-     *
-     * @param context {Context}
-     */
-    constructor(context) {
+    #csrfParameterName;
+    #csrfToken;
+
+    constructor(urlBase, csrfParameterName, csrfToken) {
         super();
-        this.#context = context;
+        this.#urlBase = urlBase;
+        this.#csrfParameterName = csrfParameterName;
+        this.#csrfToken = csrfToken;
     }
 
     isSavingEnabled() {
@@ -28,7 +28,7 @@ export class PersistenceREST extends Persistence {
     getTimers() {
         return new Promise((resolve, reject) => {
             $.ajax({
-                url: '/app/timer/private/data',
+                url: this.#urlBase,
                 type: 'GET',
                 dataType: 'text',
                 success: (data) => {
@@ -48,11 +48,11 @@ export class PersistenceREST extends Persistence {
 
     putTimer(timer) {
         let createNew = (timer.id === null);
-        let ajaxUrl = createNew ? `/app/timer/private/data` : `/app/timer/private/data/${timer.id}`;
+        let ajaxUrl = createNew ? this.#urlBase : this.#urlBase + '/' + timer.id;
         let ajaxType = createNew ? 'POST' : 'PUT';
 
         let dataToSend = Object.assign({}, timer);
-        dataToSend[this.#context.csrfParameterName] = this.#context.csrfToken;
+        dataToSend[this.#csrfParameterName] = this.#csrfToken;
 
         return new Promise((resolve, reject) => {
             $.ajax({
@@ -68,9 +68,9 @@ export class PersistenceREST extends Persistence {
     }
 
     deleteTimer(timer) {
-        let csrfKey = encodeURIComponent(this.#context.csrfParameterName);
-        let csrfValue = encodeURIComponent(this.#context.csrfToken);
-        let url = `/app/timer/private/data/${ timer.id }?${ csrfKey }=${ csrfValue }`;
+        let csrfKey = encodeURIComponent(this.#csrfParameterName);
+        let csrfValue = encodeURIComponent(this.#csrfToken);
+        let url = `${ this.#urlBase }/${ timer.id }?${ csrfKey }=${ csrfValue }`;
 
         // note: it just does not work with data parameter
 

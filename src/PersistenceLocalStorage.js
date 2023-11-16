@@ -1,20 +1,26 @@
-import {Timer} from "../Timer";
-import {Examples} from "./Examples";
-import {Persistence} from "../Persistence";
+import {Timer} from "./Timer";
+import {Persistence} from "./Persistence";
 
 /**
  *
- * @version 2023-11-02
+ * @version 2023-11-16
  * @author Patrik Harag
  */
 export class PersistenceLocalStorage extends Persistence {
     static TIMERS_DATA_KEY = 'timer.timers.data';
 
+    #exampleTimers;
+
     #savingEnabled = null;
     #timers = null;
 
-    constructor() {
+    /**
+     *
+     * @param exampleTimers {Timer[]}
+     */
+    constructor(exampleTimers) {
         super();
+        this.#exampleTimers = exampleTimers;
     }
 
     isSavingEnabled() {
@@ -65,7 +71,7 @@ export class PersistenceLocalStorage extends Persistence {
 
         // example data
         return new Promise((resolve, reject) => {
-            this.#timers = Examples.exampleTimers();
+            this.#timers = [...this.#exampleTimers];
             resolve(this.#timers);
         });
     }

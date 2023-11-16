@@ -6,50 +6,40 @@ import terser from '@rollup/plugin-terser';
 
 export default [
 
-    // browser-friendly UMD build - for public use
+    // app
     {
-        input: 'src/dist-public/main.js',
-        output: {
-            name: 'TimerJS',
-            file: pkg.browser_public,
-            format: 'umd'
-        },
+        input: 'src/app/main.js',
         plugins: [
             resolve(), // so Rollup can find libraries
             commonjs(), // so Rollup can convert libraries to an ES modules
             svg()
-        ]
-    },
-
-    // browser-friendly UMD build - for public use - MINIMIZED
-    {
-        input: 'src/dist-public/main.js',
-        output: {
-            name: 'TimerJS',
-            file: pkg.browser_public_min,
-            format: 'umd'
-        },
-        plugins: [
-            resolve(), // so Rollup can find libraries
-            commonjs(), // so Rollup can convert libraries to an ES modules
-            svg(),
-
-            terser()
-        ]
-    },
-
-    // browser-friendly UMD build - for private use (logged users)
-    {
-        input: 'src/dist-private/main.js',
-        output: {
-            name: 'TimerJS',
-            file: pkg.browser_private,
-            format: 'umd'
-        },
-        plugins: [
-            resolve(), // so Rollup can find libraries
-            commonjs(), // so Rollup can convert libraries to an ES modules
-            svg()
+        ],
+        output: [
+            {
+                // browser-friendly UMD build
+                name: 'TimerJS',
+                file: 'dist/timer-js.umd.js',
+                banner: pkg.copyright,
+                format: 'umd',
+                sourcemap: true,
+            },
+            {
+                // browser-friendly UMD build, MINIMIZED
+                name: 'TimerJS',
+                file: 'dist/timer-js.umd.min.js',
+                format: 'umd',
+                sourcemap: true,
+                plugins: [
+                    terser({
+                        sourceMap: true,
+                        format: {
+                            preamble: pkg.copyright,
+                            comments: false
+                        }
+                    })
+                ]
+            }
         ]
     }
+
 ];

@@ -1,9 +1,7 @@
 {
   "name": "timer-js",
   "version": "2.0.0-SNAPSHOT",
-  "browser_public": "dist/timer-js.umd.js",
-  "browser_public_min": "dist/timer-js.umd.min.js",
-  "browser_private": "dist/timer-js.private.umd.js",
+  "copyright": "/* Timer JS; Patrik Harag, https://harag.cz; all rights reserved */",
   "dependencies": {
     "jquery": "^3.7.1",
     "moment": "^2.29.4",
